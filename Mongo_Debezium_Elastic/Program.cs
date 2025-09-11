@@ -44,5 +44,7 @@ void SeedProducts(WebApplication app)
 {
    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+    var filter = Builders<User>.Filter.Empty;
+    if (dbContext.Users.CountDocuments(filter, null) > 0) return;
     dbContext.Users.InsertManyAsync(dbContext.FakedUsers()).GetAwaiter().GetResult();
 }

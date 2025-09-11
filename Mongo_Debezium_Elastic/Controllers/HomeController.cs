@@ -1,10 +1,11 @@
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mongo_Debezium_Elastic.Data;
 using Mongo_Debezium_Elastic.Data.Models;
 using Mongo_Debezium_Elastic.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Mongo_Debezium_Elastic.Controllers
 {
@@ -21,9 +22,7 @@ namespace Mongo_Debezium_Elastic.Controllers
 
         public async Task<IActionResult> Index(CancellationToken ct)
         {
-            var filter = Builders<User>.Filter.Empty;
-            var products = await _dbContext.Users.Find(filter, null).ToListAsync(ct);
-            return View(products);
+            return View();
         }
 
         public IActionResult Privacy()
@@ -35,6 +34,15 @@ namespace Mongo_Debezium_Elastic.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string term, CancellationToken ct)
+        {
+            var pattern = $"^{term}";
+            var filter = Builders<User>.Filter.Regex(user => user.FirstName, new BsonRegularExpression(pattern));
+            var users = await _dbContext.Users.Find(filter, null).ToListAsync(ct);
+            return Ok(users);
         }
     }
 }
