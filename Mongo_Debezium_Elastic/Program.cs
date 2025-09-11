@@ -1,7 +1,18 @@
+using Mongo_Debezium_Elastic.Data;
+using Mongo_Debezium_Elastic.Data.Models;
+using MongoDB.Driver;
+using System.Threading.Tasks;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    return new MongoClient(builder.Configuration.GetConnectionString("Database"));
+});
+builder.Services.AddScoped<DbContext>();
 
 var app = builder.Build();
 
@@ -24,6 +35,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+SeedProducts(app);
 
 
 app.Run();
+
+void SeedProducts(WebApplication app)
+{
+   using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+    dbContext.Users.InsertManyAsync(dbContext.FakedUsers()).GetAwaiter().GetResult();
+}

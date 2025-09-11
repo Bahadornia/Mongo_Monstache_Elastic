@@ -1,21 +1,29 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mongo_Debezium_Elastic.Data;
+using Mongo_Debezium_Elastic.Data.Models;
 using Mongo_Debezium_Elastic.Models;
+using MongoDB.Driver;
 
 namespace Mongo_Debezium_Elastic.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly DbContext _dbContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(DbContext dbContext)
         {
-            _logger = logger;
+            _dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        
+
+        public async Task<IActionResult> Index(CancellationToken ct)
         {
-            return View();
+            var filter = Builders<User>.Filter.Empty;
+            var products = await _dbContext.Users.Find(filter, null).ToListAsync(ct);
+            return View(products);
         }
 
         public IActionResult Privacy()
