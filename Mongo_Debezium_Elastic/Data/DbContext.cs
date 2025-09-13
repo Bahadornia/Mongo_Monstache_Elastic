@@ -21,7 +21,7 @@ public sealed class DbContext
     public IMongoCollection<User> Users => _db.GetCollection<User>("Users");
     public List<User> FakedUsers()
     {
-        var faker = new Faker<User>()
+        var faker = new Faker<User>("fa")
     .RuleFor(u => u.Id, f => Guid.NewGuid())
     .RuleFor(u => u.FirstName, f => f.Name.FirstName())
     .RuleFor(u => u.LastName, f => f.Name.LastName())

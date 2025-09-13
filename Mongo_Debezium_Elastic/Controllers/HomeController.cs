@@ -64,10 +64,10 @@ namespace Mongo_Monstache_Elastic.Controllers
                     u.Index("usersdb.users")
                    .Query(q => q
                         .Match(m => m
-            .Field(f => f.FirstName)
-            .Query(term)
-            .Fuzziness(Fuzziness.Auto)
-            .PrefixLength(1)))); // Maximum number of terms to expand the query)));
+                    .Field(f => f.FirstName)
+                    .Query(term)
+                    .Fuzziness(Fuzziness.Auto)
+                    .PrefixLength(1))));
 
 
                 }
