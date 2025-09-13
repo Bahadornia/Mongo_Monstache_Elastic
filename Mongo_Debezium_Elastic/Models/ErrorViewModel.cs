@@ -1,4 +1,4 @@
-namespace Mongo_Debezium_Elastic.Models
+namespace Mongo_Monstache_Elastic.Models
 {
     public class ErrorViewModel
     {

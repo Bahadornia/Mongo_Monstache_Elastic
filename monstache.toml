@@ -1,0 +1,18 @@
+# Connection settings
+mongo-url = "mongodb://mongo:27017"
+elasticsearch-urls = ["http://elasticsearch:9200"]
+elasticsearch-user = ""                            # Add if authentication is enabled
+elasticsearch-password = ""                        # Add if authentication is enabled
+
+# Sync settings
+direct-read-namespaces = [
+    "UsersDb.Users",
+] # Replace with your database and collection
+replay = true # Initial sync of existing data
+resume = true # Resume from last sync point
+resume-name = "default"
+
+# Logging (optional)
+[logs]
+info = "/var/log/monstache/info.log"
+error = "/var/log/monstache/error.log"

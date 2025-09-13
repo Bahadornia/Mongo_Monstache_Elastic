@@ -1,12 +1,19 @@
-using Mongo_Debezium_Elastic.Data;
-using Mongo_Debezium_Elastic.Data.Models;
+using Mongo_Monstache_Elastic.Data;
+using Mongo_Monstache_Elastic.Data.Models;
 using MongoDB.Driver;
-using System.Threading.Tasks;
+using Nest;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton(sp =>
+{
+    var settings = new ConnectionSettings(new Uri(builder.Configuration.GetConnectionString("Elastic")!)).DefaultIndex("usersdb.users");
+
+    return new ElasticClient(settings);
+});
 
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
@@ -35,14 +42,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-SeedProducts(app);
+SeedUsers(app);
 
 
 app.Run();
 
-void SeedProducts(WebApplication app)
+void SeedUsers(WebApplication app)
 {
-   using var scope = app.Services.CreateScope();
+    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
     var filter = Builders<User>.Filter.Empty;
     if (dbContext.Users.CountDocuments(filter, null) > 0) return;

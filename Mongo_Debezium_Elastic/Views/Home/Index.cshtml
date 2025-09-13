@@ -2,10 +2,23 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="row">
+    <div class="col">
+
 <div class="form-group">
     <label class="mt-2">Users</label>
-    <select name="users" class="form-control" id="users">
+    <select name="users" class="form-control" id="mongo-users">
     </select>
+</div>
+    </div>
+    <div class="col">
+        <div class="form-group">
+            <label class="mt-2">Users</label>
+            <select name="users" class="form-control" id="elastic-users">
+            </select>
+        </div>
+
+    </div>
 </div>
 
 @section Scripts {

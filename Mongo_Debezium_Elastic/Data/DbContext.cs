@@ -1,21 +1,24 @@
 ﻿using Bogus;
-using Mongo_Debezium_Elastic.Data.Models;
+using Mongo_Monstache_Elastic.Data.Models;
 using MongoDB.Driver;
-using System.Threading.Tasks;
+using Nest;
 
-namespace Mongo_Debezium_Elastic.Data;
+namespace Mongo_Monstache_Elastic.Data;
 public sealed class DbContext
 {
 
     private readonly IMongoDatabase _db;
     public IMongoDatabase Database => _db;
+    private readonly ElasticClient _elasticClient;
+    public ElasticClient ElasticClient => _elasticClient;
 
-    public DbContext(IMongoClient client)
+    public DbContext(IMongoClient client, ElasticClient elasticClient)
     {
         _db = client.GetDatabase("UsersDb");
+        _elasticClient = elasticClient;
     }
 
-    public IMongoCollection<User> Users => _db.GetCollection<User>("Products");
+    public IMongoCollection<User> Users => _db.GetCollection<User>("Users");
     public List<User> FakedUsers()
     {
         var faker = new Faker<User>()
